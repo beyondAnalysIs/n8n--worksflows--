@@ -1,0 +1,54 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "6d4a71fb-dea0-4bcb-81e1-73618b9d668a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "import datetime\n\ndef time_now():\n    \"\"\"\n      Esta función obtiene la hora actual y devuelve un \n      saludo basado en si es antes o después del mediodía.\n    \"\"\"\n    # Obtener la hora actual del sistema\n    tiempo_actual = datetime.datetime.now()\n\n    # Acceder a la componente de la hora (en formato de 24 horas)\n    hora_del_dia = tiempo_actual.hour\n\n    # Usar un condicional if-else para determinar el saludo\n    saludo_msj=''\n  \n    if hora_del_dia < 12:\n        saludo_msj = 'Buenos días ☀'\n    else:\n        saludo_msj = 'Buenas tardes/noches 🌛'\n\n    return {\n        \"saludo\": saludo_msj,\n        \"hora_actual\": tiempo_actual.strftime(\"%Y-%m-%d %H:%M:%S\")\n    }\n    \nresultado = time_now()\nreturn[{\"json\":resultado}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "1e3301d3-5433-46fc-96ec-5cf8db9c6f17",
+      "name": "Code"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a19b9648-c049-4ee8-a9cf-322851315750",
+  "meta": {
+    "instanceId": "d7b92570ccd16d25365388c72054c125330df2c43fe855e928ae8be187114631"
+  },
+  "id": "0zEqTPpeYAfvuovn",
+  "tags": []
+}
