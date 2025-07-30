@@ -6,7 +6,7 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        0,
+        -448,
         0
       ],
       "id": "6d4a71fb-dea0-4bcb-81e1-73618b9d668a",
@@ -15,16 +15,95 @@
     {
       "parameters": {
         "language": "python",
-        "pythonCode": "import datetime\n\ndef time_now():\n    \"\"\"\n      Esta función obtiene la hora actual y devuelve un \n      saludo basado en si es antes o después del mediodía.\n    \"\"\"\n    # Obtener la hora actual del sistema\n    tiempo_actual = datetime.datetime.now()\n\n    # Acceder a la componente de la hora (en formato de 24 horas)\n    hora_del_dia = tiempo_actual.hour\n\n    # Usar un condicional if-else para determinar el saludo\n    saludo_msj=''\n  \n    if hora_del_dia < 12:\n        saludo_msj = 'Buenos días ☀'\n    else:\n        saludo_msj = 'Buenas tardes/noches 🌛'\n\n    return {\n        \"saludo\": saludo_msj,\n        \"hora_actual\": tiempo_actual.strftime(\"%Y-%m-%d %H:%M:%S\")\n    }\n    \nresultado = time_now()\nreturn[{\"json\":resultado}]"
+        "pythonCode": "import datetime\n\ndef time_now():\n    \"\"\"\n      Esta función obtiene la hora actual y devuelve un \n      saludo basado en si es antes o después del mediodía.\n    \"\"\"\n    # Obtener la hora actual del sistema\n    tiempo_actual = datetime.datetime.now()\n\n    # Acceder a la componente de la hora (en formato de 24 horas)\n    hora_del_dia = tiempo_actual.hour\n\n    # Usar un condicional if-else para determinar el saludo\n    saludo_msj=''\n  \n    if hora_del_dia < 12:\n        saludo_msj = 'Buenos días ☀'\n    else:\n        saludo_msj = 'Buenas tardes/noches 🌛'\n    times_amp = int(tiempo_actual.timestamp())\n    return {\n        \"saludo\": saludo_msj,\n        \"hora_actual\": hora_del_dia,\n        \"hora_timestamp\": times_amp  \n    }\n    \nresultado = time_now()\nreturn[{\"json\":resultado}]"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        208,
+        -240,
         0
       ],
       "id": "1e3301d3-5433-46fc-96ec-5cf8db9c6f17",
       "name": "Code"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a2421edf-e4e8-4826-91d3-d9ea78aaf024",
+              "leftValue": "={{ $json.hora_timestamp }}",
+              "rightValue": 12,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -32,
+        0
+      ],
+      "id": "7fc685a6-7e0b-4176-b489-a12058926857",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "211a76ab-8fbb-4713-ad8f-1d792349f2ac",
+              "name": "saludo",
+              "value": "={{ $('Code').item.json.saludo }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        176,
+        -96
+      ],
+      "id": "1c52995f-4324-4159-a644-d2d70b9f3ba4",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7bfd9189-b2ec-45b3-ad04-1c755c7baade",
+              "name": "saludo",
+              "value": "={{ $json.saludo }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        176,
+        96
+      ],
+      "id": "e1d21b8e-d610-49b3-bb1a-e4564b3ffe1f",
+      "name": "Edit Fields1"
     }
   ],
   "pinData": {},
@@ -39,13 +118,42 @@
           }
         ]
       ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "a19b9648-c049-4ee8-a9cf-322851315750",
+  "versionId": "588280c2-a033-4d84-ae9a-07559d8a9f89",
   "meta": {
     "instanceId": "d7b92570ccd16d25365388c72054c125330df2c43fe855e928ae8be187114631"
   },
